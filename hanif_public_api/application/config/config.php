@@ -23,7 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'https://github.com/hanif212121/hanif_public/blob/main/hanif_public_api/';
+$config['base_url'] = 'https://github.com/hanif212121/hanif_public/tree/main/hanif_public_api';
 
 /*
 |--------------------------------------------------------------------------
