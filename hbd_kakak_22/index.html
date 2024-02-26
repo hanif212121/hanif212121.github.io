@@ -14,27 +14,45 @@
   <script type="application/javascript" src="script/main.js"></script>
 
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <!-- SweetAlert CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </head>
 
 <body>
   <script>
    
 
-    $(window).on("load", function() {
+   document.addEventListener("DOMContentLoaded", function() {
+  // Mendapatkan elemen audio
   var audio = document.getElementById("myAudio");
-  audio.autoplay = true;
 
-  window.onload = function() {
-  var audio = document.getElementById("myAudio");
-  audio.autoplay = true;
-};
+  // Menampilkan pop-up dengan SweetAlert
+  Swal.fire({
+    title: 'Izin Pemutaran Otomatis',
+    text: 'Untuk pengalaman terbaik, izinkan pemutaran otomatis.',
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonText: 'Izinkan',
+    cancelButtonText: 'Tidak',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Jika pengguna menyetujui, mengizinkan pemutaran otomatis
+      audio.autoplay = true;
+    } else {
+      // Jika pengguna menolak, audio tidak diputar otomatis
+      audio.autoplay = false;
+    }
+  });
 });
+
 
   </script>
 
   <div class="container">
 
-    <audio controls id="myAudio">
+    <audio controls autoplay muted id="myAudio">
       <source src="mp3/music.mp3" type="audio/mp3">
     </audio>
 
