@@ -23,11 +23,18 @@
   </audio>
 
   <script>
-    $(document).ready(function() {
-      var audio = document.getElementById("myAudio");
-  
-      audio.autoplay = true;
-    });
+   
+
+    $(window).on("load", function() {
+  var audio = document.getElementById("myAudio");
+  audio.autoplay = true;
+
+  window.onload = function() {
+  var audio = document.getElementById("myAudio");
+  audio.autoplay = true;
+};
+});
+
   </script>
 
   <div class="container">
