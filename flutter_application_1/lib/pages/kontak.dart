@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class Kontak extends StatelessWidget {
   @override
@@ -202,19 +203,34 @@ class _ListGueRekState extends State<ListGueRek> {
   Widget build(BuildContext context) {
     return Column(
       children: mahasiswa.map((data) {
-        final favColor = data['favColor'].map((i) {});
+        List favColor = data["favColor"];
         return Container(
-          height: 75,
-          child: Expanded(
-            child: Card(
-              child: Row(
+          height: 100,
+          child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
                 children: [
-                  Text(data['nama']),
-                  Text(data['noHp'].toString()),
+                  Row(
+                    children: [
+                      Text(data['nama']),
+                      Text(data['noHp'].toString()),
+                    ],
+                  ),
+                  Row(
+                    children: favColor.map((color) {
+                      return Container(
+                        padding: EdgeInsets.all(2.0),
+                        margin: EdgeInsets.only(right: 20),
+                        child: Text(color),
+                        color: Colors.amber,
+                      );
+                    }).toList(),
+                  ),
                 ],
               ),
-              color: Color.fromARGB(255, 104, 175, 234),
             ),
+            color: Color.fromARGB(255, 104, 175, 234),
           ),
         );
       }).toList(),
@@ -228,15 +244,13 @@ class TopInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Container(
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Enter your text',
-                border: OutlineInputBorder(),
-              ),
+        Flexible(
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: 'Enter your text',
+              border: OutlineInputBorder(),
             ),
           ),
         ),

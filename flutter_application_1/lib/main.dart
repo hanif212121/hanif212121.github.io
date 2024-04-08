@@ -9,8 +9,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  void f() {
+    int x = 1;
+    debugPrint('debug: $x');
+  }
+
   @override
   Widget build(BuildContext context) {
+    f();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
