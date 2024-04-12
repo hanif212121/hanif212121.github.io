@@ -1,59 +1,27 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class Kontak extends StatelessWidget {
+class Kontak extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(centerTitle: true, title: Text('Kontakku')),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                      contentPadding: EdgeInsets.zero,
-                      insetPadding: EdgeInsets.symmetric(horizontal: 20.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      content: Container(
-                        width: double.maxFinite,
-                        padding: EdgeInsets.only(
-                            top: 20.0, right: 20.0, left: 20.0, bottom: 20.0),
-                        child: TextField(
-                          style: TextStyle(fontSize: 14.0),
-                          decoration: InputDecoration(
-                              labelText: 'Masukkan input',
-                              labelStyle: TextStyle(fontSize: 14.0),
-                              border: OutlineInputBorder()),
-                        ),
-                      ),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () => {Navigator.of(context).pop()},
-                          child: Text('close'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => {Navigator.of(context).pop()},
-                          child: Text('create'),
-                        )
-                      ]);
-                });
-          },
-          child: Icon(Icons.add),
-        ),
-        body: Body());
-  }
+  State<Kontak> createState() => _KontakState();
 }
 
-class Body extends StatefulWidget {
-  @override
-  State<Body> createState() => _BodyState();
-}
+class _KontakState extends State<Kontak> {
+  List data = [];
 
-class _BodyState extends State<Body> {
   int _num = 0;
+
+  void _addKontak() {
+    setState(() {
+      data.add({
+        "nama": "muhammad hanif",
+        "noHp": 1812,
+      });
+    });
+
+    print('asdads');
+  }
 
   void _incrementCount() {
     setState(() {
@@ -69,52 +37,62 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            TopInput(),
-            SizedBox(height: 15),
-            Row(
-              children: [
-                MyButton(
-                  onPressed: _incrementCount,
-                  text: 'increments',
-                ),
-                MyButton(
-                  onPressed: _reset,
-                  text: 'reset',
-                ),
-              ],
-            ),
-            SizedBox(height: 15),
-            Row(
-              children: [
-                Text('count : $_num'),
-                SizedBox(
-                  width: 15,
-                ),
-                ElevatedButton(onPressed: null, child: Text('button')),
-              ],
-            ),
-            SizedBox(height: 15),
-            ListGueRek(),
-          ],
+    return Scaffold(
+      appBar: AppBar(centerTitle: true, title: Text('Kontakku')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return TextFieldDialog(addKontak: _addKontak);
+              });
+        },
+        child: Icon(Icons.add),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              TopInput(),
+              SizedBox(height: 15),
+              Row(
+                children: [
+                  MyButton(
+                    onPressed: _addKontak,
+                    text: 'increments',
+                  ),
+                  MyButton(
+                    onPressed: _reset,
+                    text: 'reset',
+                  ),
+                ],
+              ),
+              SizedBox(height: 15),
+              Row(
+                children: [
+                  Text('count : $_num'),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  ElevatedButton(onPressed: null, child: Text('button')),
+                ],
+              ),
+              SizedBox(height: 15),
+              ListGueRek(databaseKotak: data),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class ListGueRek extends StatefulWidget {
-  const ListGueRek({super.key});
+class ListGueRek extends StatelessWidget {
+  final List? databaseKotak;
 
-  @override
-  State<ListGueRek> createState() => _ListGueRekState();
-}
+  ListGueRek({required this.databaseKotak});
 
-class _ListGueRekState extends State<ListGueRek> {
   List<Color> myColor = [
     Colors.red,
     Colors.yellow,
@@ -130,86 +108,18 @@ class _ListGueRekState extends State<ListGueRek> {
     Colors.green,
   ];
 
-  List<Map<String, dynamic>> mahasiswa = [
-    {
-      "id": 1,
-      "nama": "Muhammad Hanifs",
-      "noHp": 081266600356,
-      "favColor": ['red', 'yellow', 'green'],
-    },
-    {
-      "id": 2,
-      "nama": "Andhika",
-      "noHp": 081266600356,
-      "favColor": ['blue', 'orange', 'purple'],
-    },
-    {
-      "id": 3,
-      "nama": "Piere",
-      "noHp": 081266600356,
-      "favColor": ['black', 'amber', 'sky'],
-    },
-    {
-      "id": 4,
-      "nama": "adit",
-      "noHp": 081266600356,
-      "favColor": ['black', 'amber', 'sky'],
-    },
-    {
-      "id": 5,
-      "nama": "adit",
-      "noHp": 081266600356,
-      "favColor": ['black', 'amber', 'sky'],
-    },
-    {
-      "id": 6,
-      "nama": "adit",
-      "noHp": 081266600356,
-      "favColor": ['black', 'amber', 'sky'],
-    },
-    {
-      "id": 7,
-      "nama": "Andhika",
-      "noHp": 081266600356,
-      "favColor": ['blue', 'orange', 'purple'],
-    },
-    {
-      "id": 8,
-      "nama": "Piere",
-      "noHp": 081266600356,
-      "favColor": ['black', 'amber', 'sky'],
-    },
-    {
-      "id": 9,
-      "nama": "adit",
-      "noHp": 081266600356,
-      "favColor": ['black', 'amber', 'sky'],
-    },
-    {
-      "id": 10,
-      "nama": "adit",
-      "noHp": 081266600356,
-      "favColor": ['black', 'amber', 'sky'],
-    },
-    {
-      "id": 11,
-      "nama": "adit",
-      "noHp": 081266600356,
-      "favColor": ['black', 'amber', 'sky'],
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: mahasiswa.map((data) {
-        List favColor = data["favColor"];
+      children: databaseKotak!.map((data) {
+        List<dynamic>? favColor = data["favColor"];
         return Container(
           height: 100,
           child: Card(
             child: Padding(
               padding: EdgeInsets.all(10),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -217,16 +127,20 @@ class _ListGueRekState extends State<ListGueRek> {
                       Text(data['noHp'].toString()),
                     ],
                   ),
-                  Row(
-                    children: favColor.map((color) {
-                      return Container(
-                        padding: EdgeInsets.all(2.0),
-                        margin: EdgeInsets.only(right: 20),
-                        child: Text(color),
-                        color: Colors.amber,
-                      );
-                    }).toList(),
-                  ),
+                  if (favColor != null)
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: favColor.map((color) {
+                          return Container(
+                            padding: EdgeInsets.all(2.0),
+                            margin: EdgeInsets.only(right: 20),
+                            child: Text(color),
+                            color: Colors.amber,
+                          );
+                        }).toList(),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -234,6 +148,53 @@ class _ListGueRekState extends State<ListGueRek> {
           ),
         );
       }).toList(),
+    );
+  }
+}
+
+class TextFieldDialog extends StatefulWidget {
+  final VoidCallback addKontak;
+  final Function(dynamic) onInputed;
+
+  TextFieldDialog({required this.addKontak, required this.onInputed});
+
+  @override
+  State<TextFieldDialog> createState() => _TextFieldDialogState();
+}
+
+class _TextFieldDialogState extends State<TextFieldDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      insetPadding: EdgeInsets.symmetric(horizontal: 20.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      content: Container(
+        width: double.maxFinite,
+        padding:
+            EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0, bottom: 20.0),
+        child: TextField(
+          style: TextStyle(fontSize: 14.0),
+          decoration: InputDecoration(
+              labelText: 'Masukkan input',
+              labelStyle: TextStyle(fontSize: 14.0),
+              border: OutlineInputBorder()),
+        ),
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () => {Navigator.of(context).pop()},
+          child: Text('close'),
+        ),
+        ElevatedButton(
+          onPressed: widget.addKontak,
+          // onPressed: () => {Navigator.of(context).pop()},
+
+          child: Text('create'),
+        )
+      ],
     );
   }
 }
