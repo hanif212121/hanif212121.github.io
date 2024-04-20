@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
+
+class CustomClassKontak {
+  static List data = [];
+}
 
 class Kontak extends StatefulWidget {
   @override
@@ -8,19 +13,25 @@ class Kontak extends StatefulWidget {
 }
 
 class _KontakState extends State<Kontak> {
-  List data = [];
-
   int _num = 0;
+  int incrementCard = 0;
 
-  void _addKontak() {
+  void _addKontak(inputNama, nomorHp) {
     setState(() {
-      data.add({
-        "nama": "muhammad hanif",
-        "noHp": 1812,
+      CustomClassKontak.data.add({
+        "indexCard": incrementCard,
+        "nama": inputNama,
+        "noHp": nomorHp.toString(),
       });
     });
+    incrementCard++;
+  }
 
-    print('asdads');
+  void _deleteKontak(indexCard) {
+    setState(() {
+      CustomClassKontak.data
+          .removeWhere((i) => i['indexCard'].toString() == indexCard);
+    });
   }
 
   void _incrementCount() {
@@ -44,7 +55,10 @@ class _KontakState extends State<Kontak> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return TextFieldDialog(addKontak: _addKontak);
+                return TextFieldDialog(
+                    onCreate: (inputNama, nomorHp) => {
+                          _addKontak(inputNama, nomorHp),
+                        });
               });
         },
         child: Icon(Icons.add),
@@ -59,7 +73,7 @@ class _KontakState extends State<Kontak> {
               Row(
                 children: [
                   MyButton(
-                    onPressed: _addKontak,
+                    onPressed: _incrementCount,
                     text: 'increments',
                   ),
                   MyButton(
@@ -79,7 +93,11 @@ class _KontakState extends State<Kontak> {
                 ],
               ),
               SizedBox(height: 15),
-              ListGueRek(databaseKotak: data),
+              ListGueRek(myData: {
+                'databaseKotak': CustomClassKontak.data,
+                'incrementCard': incrementCard,
+                'deleteKontak': _deleteKontak
+              }),
             ],
           ),
         ),
@@ -88,12 +106,80 @@ class _KontakState extends State<Kontak> {
   }
 }
 
+class TextFieldDialog extends StatelessWidget {
+  final Function(dynamic, dynamic) onCreate;
+  final TextEditingController inputNama = TextEditingController();
+  final TextEditingController nomorHp = TextEditingController();
+
+  TextFieldDialog({
+    required this.onCreate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      insetPadding: EdgeInsets.symmetric(horizontal: 20.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      content: Container(
+        width: double.maxFinite,
+        // height: 200,
+        padding:
+            EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0, bottom: 20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: inputNama,
+              style: TextStyle(fontSize: 14.0),
+              decoration: InputDecoration(
+                labelText: 'Masukkan nama',
+                labelStyle: TextStyle(fontSize: 14.0),
+                helperText: 'We will not share your email.',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              controller: nomorHp,
+              style: TextStyle(fontSize: 14.0),
+              decoration: InputDecoration(
+                  labelText: 'Masukkan nomor hp',
+                  labelStyle: TextStyle(fontSize: 14.0),
+                  border: OutlineInputBorder()),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () => {Navigator.of(context).pop()},
+          child: Text('close'),
+        ),
+        ElevatedButton(
+          onPressed: () => {
+            onCreate(inputNama.text, nomorHp.text),
+            Navigator.of(context).pop(),
+          },
+          child: Text('create'),
+        )
+      ],
+    );
+  }
+}
+
 class ListGueRek extends StatelessWidget {
-  final List? databaseKotak;
+  final Map myData;
 
-  ListGueRek({required this.databaseKotak});
+  ListGueRek({required this.myData});
 
-  List<Color> myColor = [
+  final List<Color> myColor = [
     Colors.red,
     Colors.yellow,
     Colors.green,
@@ -110,6 +196,10 @@ class ListGueRek extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List? databaseKotak = myData['databaseKotak'];
+    int? incrementCard = myData['incrementCard'];
+    var deleteKontak = myData['deleteKontak'];
+
     return Column(
       children: databaseKotak!.map((data) {
         List<dynamic>? favColor = data["favColor"];
@@ -122,9 +212,46 @@ class ListGueRek extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(data['nama']),
-                      Text(data['noHp'].toString()),
+                      Text(
+                        data['nama'],
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        data['noHp'].toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        data['indexCard'].toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        incrementCard.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        color: Colors.amber,
+                        onPressed: () {
+                          deleteKontak(data['indexCard'].toString());
+                          print('IconButton pressed');
+                        },
+                        tooltip: 'delete',
+                      ),
                     ],
                   ),
                   if (favColor != null)
@@ -148,53 +275,6 @@ class ListGueRek extends StatelessWidget {
           ),
         );
       }).toList(),
-    );
-  }
-}
-
-class TextFieldDialog extends StatefulWidget {
-  final VoidCallback addKontak;
-  final Function(dynamic) onInputed;
-
-  TextFieldDialog({required this.addKontak, required this.onInputed});
-
-  @override
-  State<TextFieldDialog> createState() => _TextFieldDialogState();
-}
-
-class _TextFieldDialogState extends State<TextFieldDialog> {
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding: EdgeInsets.zero,
-      insetPadding: EdgeInsets.symmetric(horizontal: 20.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      content: Container(
-        width: double.maxFinite,
-        padding:
-            EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0, bottom: 20.0),
-        child: TextField(
-          style: TextStyle(fontSize: 14.0),
-          decoration: InputDecoration(
-              labelText: 'Masukkan input',
-              labelStyle: TextStyle(fontSize: 14.0),
-              border: OutlineInputBorder()),
-        ),
-      ),
-      actions: [
-        ElevatedButton(
-          onPressed: () => {Navigator.of(context).pop()},
-          child: Text('close'),
-        ),
-        ElevatedButton(
-          onPressed: widget.addKontak,
-          // onPressed: () => {Navigator.of(context).pop()},
-
-          child: Text('create'),
-        )
-      ],
     );
   }
 }

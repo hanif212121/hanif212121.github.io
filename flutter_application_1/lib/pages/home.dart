@@ -99,6 +99,20 @@ class Mydrawer extends StatelessWidget {
               Navigator.of(context).pushNamed('/kontak');
             },
           ),
+          ListTile(
+            title: Text('Kontak_v2'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed('/kontak_v2');
+            },
+          ),
+          ListTile(
+            title: Text('Input File'),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushNamed('/inputFile');
+            },
+          ),
         ],
       ),
     );
